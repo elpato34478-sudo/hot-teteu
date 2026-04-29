@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- ═══ EDITAR: título da aba do navegador ═══ -->
+  <title>Acesso Exclusivo — Pack Privado 18+</title>
+
+  <style>
+    /* ══════════════════════════════════════════════════
+       RESET & BASE
+    ══════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:       #c0152a;
+      --red-glow:  #ff1a35;
+      --wine:      #6b0f1a;
+      --wine-dark: #3a0008;
+      --black:     #080508;
+      --dark:      #0f050a;
+      --text:      #f0dde2;
+      --muted:     #a07080;
+      --gold:      #d4a04a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--black);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ══════════════════════════════════════════════════
+       AVISO 18+
+    ══════════════════════════════════════════════════ */
+    #age-gate {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #000;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      text-align: center; padding: 2rem;
+    }
+    #age-gate h2 {
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      color: var(--red); margin-bottom: .8rem;
+      text-transform: uppercase; letter-spacing: 3px;
+    }
+    #age-gate p { color: var(--muted); margin-bottom: 2rem; max-width: 380px; }
+    .gate-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+    .btn-gate-yes {
+      padding: .9rem 2.4rem; background: var(--red); color: #fff;
+      border: none; border-radius: 6px; font-size: 1rem; font-weight: 700;
+      cursor: pointer; text-transform: uppercase; letter-spacing: 2px;
+      transition: background .2s;
+    }
+    .btn-gate-yes:hover { background: var(--red-glow); }
+    .btn-gate-no {
+      padding: .9rem 2rem; background: transparent; color: var(--muted);
+      border: 1px solid var(--muted); border-radius: 6px; font-size: 1rem;
+      cursor: pointer;
+    }
+
+    /* ══════════════════════════════════════════════════
+       BACKGROUND ANIMADO
+    ══════════════════════════════════════════════════ */
+    #bg-canvas {
+      position: fixed; inset: 0; z-index: 0;
+      pointer-events: none;
+    }
+
+    .page-wrap { position: relative; z-index: 1; }
+
+    /* ══════════════════════════════════════════════════
+       HERO
+    ══════════════════════════════════════════════════ */
+    .hero {
+      min-height: 100svh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 6rem 1.5rem 4rem;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(192,21,42,.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .badge {
+      display: inline-block;
+      background: linear-gradient(90deg, var(--wine), var(--red));
+      color: #fff; font-size: .72rem; letter-spacing: 3px;
+      text-transform: uppercase; padding: .4rem 1.2rem;
+      border-radius: 100px; margin-bottom: 1.8rem;
+      animation: fadeDown .8s ease both;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 6vw, 4.4rem);
+      font-weight: 900; line-height: 1.1;
+      text-transform: uppercase; letter-spacing: -1px;
+      animation: fadeDown .9s .1s ease both;
+      max-width: 820px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(90deg, var(--red-glow), var(--gold), var(--red));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p.sub {
+      margin: 1.4rem auto 2.4rem;
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: var(--muted); max-width: 540px;
+      animation: fadeDown 1s .2s ease both;
+    }
+
+    /* CTA principal */
+    .btn-cta {
+      display: inline-flex; align-items: center; gap: .6rem;
+      /* ═══ EDITAR: troque o href pelo link de pagamento ═══ */
+      padding: 1.1rem 3rem;
+      background: linear-gradient(135deg, var(--red) 0%, #8b0000 100%);
+      color: #fff; font-size: 1.1rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 2px;
+      border: none; border-radius: 50px; cursor: pointer;
+      position: relative; overflow: hidden;
+      box-shadow: 0 0 30px rgba(192,21,42,.5), 0 0 60px rgba(192,21,42,.2);
+      animation: fadeDown 1s .3s ease both, pulse 2.4s 1.5s ease-in-out infinite;
+      text-decoration: none;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn-cta::after {
+      content: '';
+      position: absolute; top: -50%; left: -60%;
+      width: 40%; height: 200%;
+      background: rgba(255,255,255,.15);
+      transform: skewX(-20deg);
+      animation: shimmer 3s 2s ease-in-out infinite;
+    }
+    .btn-cta:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 50px rgba(255,26,53,.7), 0 0 100px rgba(192,21,42,.3);
+    }
+
+    .hero-note {
+      margin-top: 1rem; font-size: .8rem; color: var(--muted);
+      animation: fadeDown 1s .4s ease both;
+    }
+
+    /* ══════════════════════════════════════════════════
+       CARROSSEL
+    ══════════════════════════════════════════════════ */
+    .section { padding: 5rem 1.5rem; max-width: 1000px; margin: 0 auto; }
+    .section-label {
+      text-align: center; color: var(--red); font-size: .75rem;
+      letter-spacing: 4px; text-transform: uppercase; margin-bottom: .6rem;
+    }
+    .section-title {
+      text-align: center; font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 800; text-transform: uppercase; margin-bottom: 3rem;
+    }
+    .section-title span { color: var(--red); }
+
+    .carousel-wrap {
+      position: relative; max-width: 520px; margin: 0 auto;
+    }
+    .carousel-track {
+      display: flex; overflow: hidden; border-radius: 18px;
+      box-shadow: 0 0 40px rgba(192,21,42,.45), 0 0 80px rgba(192,21,42,.15);
+    }
+    .carousel-slide {
+      min-width: 100%; position: relative;
+      aspect-ratio: 3/4;
+      transition: opacity .5s;
+    }
+    /* fallback escuro caso a imagem não carregue */
+    .carousel-slide {
+      background-color: #1a0010;
+    }
+
+    /* Placeholder interno enquanto sem imagem */
+    .slide-placeholder {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: .5rem; opacity: .35;
+    }
+    .slide-placeholder svg { width: 48px; fill: var(--red); }
+    .slide-placeholder p { font-size: .8rem; color: var(--muted); }
+
+    .slide-overlay {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.85), transparent);
+      padding: 1.5rem 1rem .8rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    /* ═══ EDITAR: nome da modelo ═══ */
+    .slide-name { font-size: .85rem; letter-spacing: 2px; color: var(--text); text-transform: uppercase; }
+    .slide-tag {
+      font-size: .68rem; background: var(--red); color: #fff;
+      padding: .2rem .6rem; border-radius: 4px; letter-spacing: 1px;
+    }
+
+    .carousel-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(192,21,42,.75); border: none; color: #fff;
+      font-size: 1.2rem; cursor: pointer; z-index: 2;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+      transition: background .2s, transform .15s;
+    }
+    .carousel-btn:hover { background: var(--red); transform: translateY(-50%) scale(1.1); }
+    .carousel-prev { left: -22px; }
+    .carousel-next { right: -22px; }
+
+    .carousel-dots {
+      display: flex; justify-content: center; gap: .5rem; margin-top: 1.2rem;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--wine); cursor: pointer;
+      transition: background .2s, transform .2s;
+    }
+    .dot.active { background: var(--red); transform: scale(1.4); }
+
+    /* ══════════════════════════════════════════════════
+       COPY DE URGÊNCIA / OFERTA
+    ══════════════════════════════════════════════════ */
+    .offer-section {
+      background: linear-gradient(135deg, var(--wine-dark) 0%, #1a0008 50%, var(--wine-dark) 100%);
+      border-top: 1px solid rgba(192,21,42,.3);
+      border-bottom: 1px solid rgba(192,21,42,.3);
+      padding: 5rem 1.5rem;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .offer-section::before {
+      content: '';
+      position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+      width: 500px; height: 300px;
+      background: radial-gradient(ellipse, rgba(192,21,42,.25), transparent 70%);
+      pointer-events: none;
+    }
+    .offer-section p.line {
+      font-size: clamp(1rem, 2.8vw, 1.4rem);
+      max-width: 660px; margin: 0 auto 1.4rem;
+      color: var(--text);
+    }
+    .offer-section p.line strong { color: var(--red-glow); }
+    .offer-section p.line em { color: var(--gold); font-style: normal; font-weight: 700; }
+    .divider-red {
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, transparent, var(--red), transparent);
+      margin: 2rem auto;
+    }
+
+    /* ══════════════════════════════════════════════════
+       PREÇO
+    ══════════════════════════════════════════════════ */
+    .price-box {
+      display: inline-flex; flex-direction: column;
+      align-items: center; gap: .4rem;
+      background: rgba(0,0,0,.5); border: 1px solid rgba(192,21,42,.4);
+      border-radius: 16px; padding: 2rem 3rem; margin-top: 2rem;
+    }
+    .price-old {
+      font-size: 1rem; text-decoration: line-through; color: var(--muted);
+    }
+    .price-tag {
+      /* ═══ EDITAR: troque pelo preço real ═══ */
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 900; color: #fff;
+      line-height: 1;
+    }
+    .price-tag span { color: var(--red-glow); font-size: .55em; }
+    .price-label { font-size: .8rem; color: var(--muted); letter-spacing: 2px; }
+
+    /* ══════════════════════════════════════════════════
+       BENEFÍCIOS (cards)
+    ══════════════════════════════════════════════════ */
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem; margin-top: 1rem;
+    }
+    .benefit-card {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(192,21,42,.2);
+      border-radius: 14px; padding: 1.6rem 1.2rem;
+      text-align: center;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+    }
+    .benefit-card:hover {
+      border-color: var(--red);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(192,21,42,.25);
+    }
+    .benefit-icon { font-size: 2rem; margin-bottom: .8rem; }
+    .benefit-card h3 { font-size: .95rem; font-weight: 700; margin-bottom: .4rem; }
+    .benefit-card p { font-size: .82rem; color: var(--muted); }
+
+    /* ══════════════════════════════════════════════════
+       CONTADOR
+    ══════════════════════════════════════════════════ */
+    .timer-section {
+      text-align: center; padding: 4rem 1.5rem;
+      background: rgba(192,21,42,.05);
+      border-top: 1px solid rgba(192,21,42,.15);
+    }
+    .timer-label {
+      font-size: .8rem; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 1rem;
+    }
+    .timer-display {
+      display: inline-flex; align-items: center; gap: 1rem;
+      font-size: clamp(2rem, 8vw, 4rem); font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+    .timer-block { display: flex; flex-direction: column; align-items: center; }
+    .timer-num {
+      background: rgba(0,0,0,.6); border: 1px solid rgba(192,21,42,.5);
+      border-radius: 10px; padding: .4rem .8rem; min-width: 70px;
+      text-align: center; color: var(--red-glow);
+      box-shadow: 0 0 20px rgba(192,21,42,.3);
+    }
+    .timer-unit { font-size: .65rem; letter-spacing: 2px; color: var(--muted); margin-top: .3rem; }
+    .timer-colon { color: var(--red); margin-bottom: 1.2rem; }
+    .timer-sub { margin-top: 1.2rem; color: var(--muted); font-size: .9rem; }
+    .timer-sub strong { color: var(--red-glow); }
+
+    /* ══════════════════════════════════════════════════
+       FAQ / QUEBRA DE OBJEÇÕES
+    ══════════════════════════════════════════════════ */
+    .faq-list { max-width: 640px; margin: 0 auto; }
+    .faq-item {
+      border-bottom: 1px solid rgba(192,21,42,.2);
+      padding: 1.2rem 0; cursor: pointer;
+    }
+    .faq-q {
+      display: flex; justify-content: space-between; align-items: center;
+      font-weight: 700; font-size: .95rem; gap: 1rem;
+    }
+    .faq-q .icon { color: var(--red); font-size: 1.2rem; transition: transform .3s; flex-shrink: 0; }
+    .faq-item.open .faq-q .icon { transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height .35s ease, padding .3s;
+      color: var(--muted); font-size: .9rem;
+    }
+    .faq-item.open .faq-a { max-height: 120px; padding-top: .8rem; }
+
+    /* ══════════════════════════════════════════════════
+       CTA FINAL
+    ══════════════════════════════════════════════════ */
+    .final-cta {
+      text-align: center; padding: 6rem 1.5rem;
+      position: relative; overflow: hidden;
+    }
+    .final-cta::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(192,21,42,.22), transparent 70%);
+    }
+    .final-cta h2 {
+      font-size: clamp(1.6rem, 4.5vw, 3rem);
+      font-weight: 900; text-transform: uppercase; max-width: 600px;
+      margin: 0 auto 2.2rem; line-height: 1.15;
+      position: relative;
+    }
+    .final-cta h2 span { color: var(--red-glow); }
+
+    .btn-final {
+      display: inline-flex; align-items: center; gap: .7rem;
+      padding: 1.3rem 3.4rem;
+      background: linear-gradient(135deg, var(--red) 0%, #7a0010 100%);
+      color: #fff; font-size: 1.2rem; font-weight: 900;
+      text-transform: uppercase; letter-spacing: 2px;
+      border: none; border-radius: 60px; cursor: pointer;
+      position: relative; overflow: hidden;
+      box-shadow: 0 0 40px rgba(192,21,42,.6), 0 0 80px rgba(192,21,42,.25);
+      animation: pulse 2s ease-in-out infinite;
+      text-decoration: none;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn-final::after {
+      content: '';
+      position: absolute; top: -50%; left: -60%;
+      width: 40%; height: 200%;
+      background: rgba(255,255,255,.18);
+      transform: skewX(-20deg);
+      animation: shimmer 2.5s 1s ease-in-out infinite;
+    }
+    .btn-final:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 60px rgba(255,26,53,.8), 0 0 120px rgba(192,21,42,.4);
+    }
+
+    .final-note {
+      margin-top: 1.4rem; font-size: .78rem; color: var(--muted);
+      position: relative;
+    }
+
+    /* ══════════════════════════════════════════════════
+       POP-UPS DE PROVA SOCIAL
+    ══════════════════════════════════════════════════ */
+    #toast-container {
+      position: fixed; bottom: 1.5rem; left: 1.5rem;
+      z-index: 500; display: flex; flex-direction: column;
+      gap: .7rem; pointer-events: none;
+    }
+    .toast {
+      background: rgba(12,4,8,.95);
+      border: 1px solid rgba(192,21,42,.5);
+      border-radius: 10px; padding: .85rem 1.1rem;
+      display: flex; align-items: center; gap: .75rem;
+      min-width: 240px; max-width: 300px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.6);
+      opacity: 0; transform: translateX(-20px);
+      transition: opacity .4s, transform .4s;
+    }
+    .toast.show { opacity: 1; transform: translateX(0); }
+    .toast-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--wine), var(--red));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: .9rem; flex-shrink: 0; color: #fff;
+    }
+    .toast-text { font-size: .8rem; line-height: 1.4; }
+    .toast-text strong { color: var(--text); display: block; }
+    .toast-text span { color: var(--muted); }
+    .toast-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #22c55e; flex-shrink: 0; margin-left: auto;
+      box-shadow: 0 0 6px #22c55e;
+    }
+
+    /* ══════════════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════════════ */
+    footer {
+      text-align: center; padding: 2rem 1.5rem;
+      border-top: 1px solid rgba(192,21,42,.15);
+      font-size: .75rem; color: var(--muted); line-height: 2;
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--red); }
+
+    /* ══════════════════════════════════════════════════
+       ANIMAÇÕES
+    ══════════════════════════════════════════════════ */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 30px rgba(192,21,42,.5), 0 0 60px rgba(192,21,42,.2); }
+      50%       { box-shadow: 0 0 50px rgba(255,26,53,.75), 0 0 90px rgba(192,21,42,.35); }
+    }
+    @keyframes shimmer {
+      0%   { left: -60%; }
+      100% { left: 140%; }
+    }
+
+    /* ══════════════════════════════════════════════════
+       SCROLL REVEAL
+    ══════════════════════════════════════════════════ */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ══════════════════════════════════════════════════
+       RESPONSIVO
+    ══════════════════════════════════════════════════ */
+    @media (max-width: 600px) {
+      .carousel-prev { left: -12px; }
+      .carousel-next { right: -12px; }
+      .price-box { padding: 1.6rem 2rem; }
+      #toast-container { left: 1rem; right: 1rem; }
+      .toast { min-width: auto; max-width: none; }
+      .timer-num { min-width: 56px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════
+     AVISO DE IDADE
+══════════════════════════════════════════════════ -->
+<div id="age-gate">
+  <h2>⚠ Conteúdo Adulto 18+</h2>
+  <p>Este site contém conteúdo adulto. Você confirma que tem 18 anos ou mais e concorda em acessar este material?</p>
+  <div class="gate-btns">
+    <button class="btn-gate-yes" onclick="closeGate()">Sim, tenho 18+ anos</button>
+    <button class="btn-gate-no" onclick="window.location.href='https://google.com'">Não, sair</button>
+  </div>
+</div>
+
+<!-- Background animado (canvas) -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- Container de toasts (prova social) -->
+<div id="toast-container"></div>
+
+<div class="page-wrap">
+
+  <!-- ══════════════════════════════════════════════════
+       HERO
+  ══════════════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="badge">🔥 Acesso por tempo limitado · Conteúdo adulto 18+</div>
+
+    <h1>
+      Acesso<br>
+      <span>Exclusivo</span><br>
+      Liberado
+    </h1>
+
+    <p class="sub">
+      <!-- ═══ EDITAR: subtítulo principal ═══ -->
+      Conteúdo privado, selecionado e disponível apenas para quem entrou pelo convite certo.
+    </p>
+
+    <!-- ═══ EDITAR: href = link do seu checkout / pagamento ═══ -->
+    <a href="#LINK_PAGAMENTO" class="btn-cta">
+      🔓 Quero Acessar Agora
+    </a>
+
+    <p class="hero-note">🔒 Compra 100% discreta · Acesso imediato</p>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       CARROSSEL
+  ══════════════════════════════════════════════════ -->
+  <section class="section reveal" id="carousel-section">
+    <p class="section-label">Prévias exclusivas</p>
+    <h2 class="section-title">Uma <span>amostra</span> do que te espera</h2>
+
+    <div class="carousel-wrap">
+      <div class="carousel-track" id="carouselTrack">
+
+        <div class="carousel-slide" style="background-image:url('fotos/WhatsApp Image 2026-04-29 at 16.12.39.jpeg');background-size:cover;background-position:center top;">
+          <div class="slide-overlay">
+            <span class="slide-name">Nome da Modelo</span>
+            <span class="slide-tag">EXCLUSIVO</span>
+          </div>
+        </div>
+
+        <div class="carousel-slide" style="background-image:url('fotos/WhatsApp Image 2026-04-29 at 16.15.19.jpeg');background-size:cover;background-position:center top;">
+          <div class="slide-overlay">
+            <span class="slide-name">Nome da Modelo</span>
+            <span class="slide-tag">PRIVADO</span>
+          </div>
+        </div>
+
+        <div class="carousel-slide" style="background-image:url('fotos/WhatsApp Image 2026-04-29 at 16.18.21.jpeg');background-size:cover;background-position:center top;">
+          <div class="slide-overlay">
+            <span class="slide-name">Nome da Modelo</span>
+            <span class="slide-tag">VIP</span>
+          </div>
+        </div>
+
+      </div>
+
+      <button class="carousel-btn carousel-prev" id="prevBtn" aria-label="Anterior">&#8592;</button>
+      <button class="carousel-btn carousel-next" id="nextBtn" aria-label="Próximo">&#8594;</button>
+
+      <div class="carousel-dots" id="carouselDots"></div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       OFERTA / URGÊNCIA COPY
+  ══════════════════════════════════════════════════ -->
+  <section class="offer-section reveal">
+    <p class="section-label">Por que agora?</p>
+
+    <p class="line">
+      Você <strong>não chegou aqui por acaso.</strong> Essa página não fica disponível o tempo todo.
+    </p>
+    <div class="divider-red"></div>
+    <p class="line">
+      O acesso pode <em>sair do ar a qualquer momento.</em> Quem entra agora garante o conteúdo completo antes da próxima atualização de preço.
+    </p>
+    <div class="divider-red"></div>
+    <p class="line">
+      <em>Depois que fechar, não tem garantia de retorno.</em>
+    </p>
+
+    <!-- ═══ EDITAR: preço antigo e novo ═══ -->
+    <div class="price-box">
+      <span class="price-old">De R$ 97,00</span>
+      <div class="price-tag"><span>R$</span> 29,90</div>
+      <span class="price-label">Acesso único · Pagamento seguro</span>
+    </div>
+
+    <!-- ═══ EDITAR: href = link do seu checkout ═══ -->
+    <br><br>
+    <a href="#LINK_PAGAMENTO" class="btn-cta" style="animation-delay:.5s">
+      🔓 Quero Acessar Agora
+    </a>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       BENEFÍCIOS
+  ══════════════════════════════════════════════════ -->
+  <section class="section reveal">
+    <p class="section-label">O que você leva</p>
+    <h2 class="section-title">Tudo que vem <span>incluso</span></h2>
+
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="benefit-icon">⚡</div>
+        <h3>Acesso Imediato</h3>
+        <p>Liberado segundos após o pagamento. Sem espera.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">💎</div>
+        <h3>Conteúdo Exclusivo</h3>
+        <p>Material separado especialmente para essa oferta.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🔒</div>
+        <h3>Compra Discreta</h3>
+        <p>Privacidade total. Ninguém fica sabendo.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🔄</div>
+        <h3>Atualizações</h3>
+        <p>Conteúdo selecionado com novidades periódicas.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🎯</div>
+        <h3>Oferta Limitada</h3>
+        <p>Disponível apenas por tempo determinado.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">📱</div>
+        <h3>100% Mobile</h3>
+        <p>Funciona perfeitamente no celular, tablet e PC.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       CONTADOR REGRESSIVO
+  ══════════════════════════════════════════════════ -->
+  <div class="timer-section reveal">
+    <p class="timer-label">⏳ Oferta expira em</p>
+    <div class="timer-display">
+      <div class="timer-block">
+        <div class="timer-num" id="t-min">09</div>
+        <div class="timer-unit">Min</div>
+      </div>
+      <span class="timer-colon">:</span>
+      <div class="timer-block">
+        <div class="timer-num" id="t-sec">59</div>
+        <div class="timer-unit">Seg</div>
+      </div>
+    </div>
+    <p class="timer-sub"><strong>Últimas liberações disponíveis hoje.</strong> Não perca.</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       FAQ / QUEBRA DE OBJEÇÕES
+  ══════════════════════════════════════════════════ -->
+  <section class="section reveal" style="max-width: 700px;">
+    <p class="section-label">Suas dúvidas</p>
+    <h2 class="section-title">Perguntas <span>frequentes</span></h2>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">
+          <span>A compra é discreta?</span>
+          <span class="icon">+</span>
+        </div>
+        <div class="faq-a">Sim. O acesso é totalmente privado e seguro. A cobrança aparece de forma discreta no seu cartão.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          <span>Recebo na hora?</span>
+          <span class="icon">+</span>
+        </div>
+        <div class="faq-a">Sim. O acesso é liberado automaticamente após confirmação do pagamento, em segundos.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          <span>É conteúdo exclusivo?</span>
+          <span class="icon">+</span>
+        </div>
+        <div class="faq-a">Sim. O material foi separado especialmente para essa oferta e não está disponível em outro lugar.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          <span>Funciona no celular?</span>
+          <span class="icon">+</span>
+        </div>
+        <div class="faq-a">Sim. A página é 100% otimizada para mobile. Funciona em qualquer dispositivo sem travamentos.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          <span>Quanto tempo tenho de acesso?</span>
+          <span class="icon">+</span>
+        </div>
+        <!-- ═══ EDITAR: prazo de acesso ═══ -->
+        <div class="faq-a">O acesso é vitalício. Você entra quantas vezes quiser após a compra.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       CTA FINAL
+  ══════════════════════════════════════════════════ -->
+  <section class="final-cta reveal">
+    <h2>
+      Você já está a um clique de<br>
+      <span>desbloquear o acesso.</span>
+    </h2>
+
+    <!-- ═══ EDITAR: href = link do seu checkout ═══ -->
+    <a href="#LINK_PAGAMENTO" class="btn-final">
+      🔓 Desbloquear Pack Agora
+    </a>
+
+    <p class="final-note">
+      🔐 Ambiente seguro · Pagamento criptografado · Acesso imediato após confirmação
+    </p>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════════ -->
+  <footer>
+    <!-- ═══ EDITAR: links de política / contato ═══ -->
+    <p>Conteúdo exclusivo para maiores de 18 anos. · Ao comprar, você declara ser maior de idade.</p>
+    <p>
+      <a href="#">Política de Privacidade</a> &nbsp;·&nbsp;
+      <a href="#">Termos de Uso</a> &nbsp;·&nbsp;
+      <a href="#">Suporte</a>
+    </p>
+    <p style="margin-top:.5rem; opacity:.5;">© 2026 · Todos os direitos reservados.</p>
+  </footer>
+
+</div><!-- /page-wrap -->
+
+<!-- ══════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════ -->
+<script>
+/* ─────────────────────────────────────────────
+   AVISO DE IDADE
+───────────────────────────────────────────── */
+function closeGate() {
+  const g = document.getElementById('age-gate');
+  g.style.transition = 'opacity .5s';
+  g.style.opacity = '0';
+  setTimeout(() => g.remove(), 500);
+}
+
+/* ─────────────────────────────────────────────
+   CANVAS BACKGROUND — partículas + glow
+───────────────────────────────────────────── */
+(function() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx    = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function Particle() {
+    this.reset();
+  }
+  Particle.prototype.reset = function() {
+    this.x  = Math.random() * W;
+    this.y  = Math.random() * H;
+    this.r  = Math.random() * 1.8 + .4;
+    this.vx = (Math.random() - .5) * .4;
+    this.vy = (Math.random() - .5) * .4;
+    this.a  = Math.random() * .6 + .15;
+    this.da = (Math.random() - .5) * .004;
+  };
+  Particle.prototype.update = function() {
+    this.x += this.vx; this.y += this.vy; this.a += this.da;
+    if (this.a < .05 || this.a > .85) this.da *= -1;
+    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+  };
+
+  for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+  let t = 0;
+  function draw() {
+    t += .003;
+    ctx.clearRect(0, 0, W, H);
+
+    /* fundo gradiente escuro */
+    const bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0,   '#060208');
+    bg.addColorStop(.5,  '#0a0310');
+    bg.addColorStop(1,   '#080106');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    /* brilho vermelho animado */
+    const gx = W * (.5 + Math.sin(t) * .12);
+    const gy = H * (.42 + Math.cos(t * .7) * .1);
+    const gr = ctx.createRadialGradient(gx, gy, 0, gx, gy, Math.min(W, H) * .55);
+    gr.addColorStop(0,   'rgba(192,21,42,.14)');
+    gr.addColorStop(.5,  'rgba(107,15,26,.06)');
+    gr.addColorStop(1,   'transparent');
+    ctx.fillStyle = gr;
+    ctx.fillRect(0, 0, W, H);
+
+    /* segundo brilho inferior */
+    const g2 = ctx.createRadialGradient(W * .8, H * .85, 0, W * .8, H * .85, W * .35);
+    g2.addColorStop(0,  'rgba(130,8,30,.1)');
+    g2.addColorStop(1,  'transparent');
+    ctx.fillStyle = g2;
+    ctx.fillRect(0, 0, W, H);
+
+    /* partículas */
+    particles.forEach(p => {
+      p.update();
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,60,80,${p.a})`;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ─────────────────────────────────────────────
+   CARROSSEL
+───────────────────────────────────────────── */
+(function() {
+  const track  = document.getElementById('carouselTrack');
+  const slides = track.querySelectorAll('.carousel-slide');
+  const dotsEl = document.getElementById('carouselDots');
+  const prev   = document.getElementById('prevBtn');
+  const next   = document.getElementById('nextBtn');
+  let current  = 0, timer;
+
+  /* cria dots */
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goto(i));
+    dotsEl.appendChild(d);
+  });
+
+  function goto(n) {
+    current = (n + slides.length) % slides.length;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    track.style.transition = 'transform .5s cubic-bezier(.4,0,.2,1)';
+    dotsEl.querySelectorAll('.dot').forEach((d, i) =>
+      d.classList.toggle('active', i === current));
+  }
+
+  prev.addEventListener('click', () => { goto(current - 1); resetAuto(); });
+  next.addEventListener('click', () => { goto(current + 1); resetAuto(); });
+
+  function autoPlay() { goto(current + 1); }
+  function resetAuto() { clearInterval(timer); timer = setInterval(autoPlay, 3800); }
+  resetAuto();
+})();
+
+/* ─────────────────────────────────────────────
+   CONTADOR REGRESSIVO
+───────────────────────────────────────────── */
+(function() {
+  const minEl = document.getElementById('t-min');
+  const secEl = document.getElementById('t-sec');
+  let total = 9 * 60 + 59; /* 9:59 — edite aqui se quiser outro tempo */
+
+  setInterval(() => {
+    if (total <= 0) { total = 9 * 60 + 59; return; } /* reinicia sutilmente */
+    total--;
+    const m = Math.floor(total / 60);
+    const s = total % 60;
+    minEl.textContent = String(m).padStart(2, '0');
+    secEl.textContent = String(s).padStart(2, '0');
+  }, 1000);
+})();
+
+/* ─────────────────────────────────────────────
+   PROVA SOCIAL — TOASTS
+───────────────────────────────────────────── */
+(function() {
+  const container = document.getElementById('toast-container');
+
+  /* ═══ EDITAR: adicione, remova ou troque as mensagens ═══ */
+  const messages = [
+    { name: 'Lucas',   msg: 'acabou de garantir o acesso',    ago: 'agora'       },
+    { name: 'Rafael',  msg: 'comprou o pack completo',         ago: '2 min atrás' },
+    { name: 'André',   msg: 'desbloqueou o conteúdo privado',  ago: '4 min atrás' },
+    { name: 'Mateus',  msg: 'entrou pelo link exclusivo',       ago: 'agora'       },
+    { name: 'Gabriel', msg: 'garantiu o acesso antes do fim',   ago: '1 min atrás' },
+    { name: 'Thiago',  msg: 'acabou de comprar',               ago: 'agora'       },
+    { name: '+3 pessoas', msg: 'estão vendo essa oferta agora', ago: ''           },
+  ];
+
+  function showToast() {
+    const data = messages[Math.floor(Math.random() * messages.length)];
+    const t    = document.createElement('div');
+    t.className = 'toast';
+    t.innerHTML = `
+      <div class="toast-avatar">${data.name[0]}</div>
+      <div class="toast-text">
+        <strong>${data.name}</strong>
+        <span>${data.msg}${data.ago ? ' · ' + data.ago : ''}</span>
+      </div>
+      <div class="toast-dot"></div>`;
+
+    container.appendChild(t);
+    requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('show')));
+
+    setTimeout(() => {
+      t.classList.remove('show');
+      setTimeout(() => t.remove(), 450);
+    }, 3800);
+  }
+
+  /* primeira aparição após 3s, depois aleatório entre 5s–12s */
+  setTimeout(() => {
+    showToast();
+    function loop() {
+      const delay = 5000 + Math.random() * 7000;
+      setTimeout(() => { showToast(); loop(); }, delay);
+    }
+    loop();
+  }, 3000);
+})();
+
+/* ─────────────────────────────────────────────
+   FAQ ACCORDION
+───────────────────────────────────────────── */
+document.querySelectorAll('.faq-item').forEach(item => {
+  item.querySelector('.faq-q').addEventListener('click', () => {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+
+/* ─────────────────────────────────────────────
+   SCROLL REVEAL
+───────────────────────────────────────────── */
+(function() {
+  const els = document.querySelectorAll('.reveal');
+  const io  = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: .12 });
+  els.forEach(el => io.observe(el));
+})();
+</script>
+</body>
+</html>
