@@ -148,12 +148,9 @@
       box-shadow: 0 0 40px rgba(192,21,42,.45), 0 0 80px rgba(192,21,42,.15);
     }
     .carousel-slide {
-      min-width: 100%; position: relative;
+      position: relative;
       aspect-ratio: 3/4;
-      transition: opacity .5s;
-    }
-    /* fallback escuro caso a imagem não carregue */
-    .carousel-slide {
+      flex-shrink: 0;
       background-color: #1a0010;
     }
 
@@ -801,6 +798,7 @@
    CARROSSEL
 ───────────────────────────────────────────── */
 (function() {
+  const wrap   = document.querySelector('.carousel-wrap');
   const track  = document.getElementById('carouselTrack');
   const slides = track.querySelectorAll('.carousel-slide');
   const dotsEl = document.getElementById('carouselDots');
@@ -808,21 +806,39 @@
   const next   = document.getElementById('nextBtn');
   let current  = 0, timer;
 
+  /* garante que cada slide ocupa exatamente a largura visível */
+  function setSlideWidths() {
+    const w = wrap.offsetWidth;
+    slides.forEach(s => { s.style.width = w + 'px'; s.style.flexShrink = '0'; });
+  }
+  setSlideWidths();
+  window.addEventListener('resize', () => { setSlideWidths(); goto(current); });
+
   /* cria dots */
   slides.forEach((_, i) => {
     const d = document.createElement('div');
     d.className = 'dot' + (i === 0 ? ' active' : '');
-    d.addEventListener('click', () => goto(i));
+    d.addEventListener('click', () => { goto(i); resetAuto(); });
     dotsEl.appendChild(d);
   });
 
   function goto(n) {
     current = (n + slides.length) % slides.length;
-    track.style.transform = `translateX(-${current * 100}%)`;
+    /* usa pixels reais em vez de % para evitar bug de cálculo */
+    const offset = current * wrap.offsetWidth;
     track.style.transition = 'transform .5s cubic-bezier(.4,0,.2,1)';
+    track.style.transform  = `translateX(-${offset}px)`;
     dotsEl.querySelectorAll('.dot').forEach((d, i) =>
       d.classList.toggle('active', i === current));
   }
+
+  /* suporte a swipe no mobile */
+  let touchStartX = 0;
+  track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) { goto(diff > 0 ? current + 1 : current - 1); resetAuto(); }
+  }, { passive: true });
 
   prev.addEventListener('click', () => { goto(current - 1); resetAuto(); });
   next.addEventListener('click', () => { goto(current + 1); resetAuto(); });
